@@ -2,20 +2,29 @@
 import spacy
 from spacy import displacy
 import streamlit as st
+from spacy.cli import download
+
+# -------------------------------
+# Step 0: Streamlit Page Config (MUST be first Streamlit command)
+# -------------------------------
+st.set_page_config(page_title="Named Entity Recognition", page_icon="🤖", layout="centered")
 
 # -------------------------------
 # Step 1: Load SpaCy Model
 # -------------------------------
 @st.cache_resource
 def load_model():
-    return spacy.load("en_core_web_sm")
+    try:
+        return spacy.load("en_core_web_sm")
+    except OSError:
+        download("en_core_web_sm")
+        return spacy.load("en_core_web_sm")
 
 nlp = load_model()
 
 # -------------------------------
 # Streamlit App UI
 # -------------------------------
-st.set_page_config(page_title="Named Entity Recognition", page_icon="🤖", layout="centered")
 st.title("🔍 Named Entity Recognition (NER) with SpaCy")
 st.write("Paste any **customer query** below and see key entities highlighted.")
 
@@ -44,9 +53,14 @@ if st.button("Extract Entities"):
             # -------------------------------
             st.subheader("🖼️ Visualization")
             html = displacy.render(doc, style="ent", jupyter=False)
-            st.markdown(f"<div style='background-color:white; padding:10px; border-radius:10px'>{html}</div>", unsafe_allow_html=True)
+            st.markdown(
+                f"<div style='background-color:white; padding:10px; border-radius:10px'>{html}</div>",
+                unsafe_allow_html=True
+            )
 
         else:
             st.warning("No entities found. Try another query!")
     else:
         st.error("Please enter some text!")
+
+
