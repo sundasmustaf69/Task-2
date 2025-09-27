@@ -31,7 +31,7 @@ st.write("Paste any **customer query** below and see key entities highlighted.")
 # -------------------------------
 # Step 2: User Input
 # -------------------------------
-user_input = st.text_area("✍️ Enter customer query:", "Do you have the iPhone 15 in stock?")
+user_input = st.text_area("✍️ Enter customer query:")
 
 if st.button("Extract Entities"):
     if user_input.strip():
@@ -62,5 +62,6 @@ if st.button("Extract Entities"):
             st.warning("No entities found. Try another query!")
     else:
         st.error("Please enter some text!")
+
 
 
